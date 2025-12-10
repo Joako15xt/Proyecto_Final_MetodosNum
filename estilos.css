@@ -1,0 +1,122 @@
+/* ===== ESTILOS GENERALES ===== */
+body {
+  background: #f7f4f4;
+  font-family: "Segoe UI", sans-serif;
+  color: #333;
+}
+
+.titulo {
+  text-align: center;
+  font-size: 42px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #6A0B1F;
+}
+
+.descripcion {
+  text-align: center;
+  font-size: 16px;
+  max-width: 700px;
+  margin: auto;
+  opacity: 0.85;
+}
+
+/* ===== CÁPSULAS ===== */
+.capsulas {
+  text-align: center;
+  margin-top: 25px;
+}
+
+.capsula {
+  display: inline-block;
+  background: #6A0B1F;
+  color: white;
+  padding: 8px 18px;
+  margin: 6px;
+  border-radius: 20px;
+  font-size: 14px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* ===== TARJETAS ===== */
+.card-metodo {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+  text-align: center;
+  transition: 0.3s;
+  cursor: pointer;
+  margin-bottom: 25px;
+  border-top: 6px solid #6A0B1F;
+}
+
+.card-metodo:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.card-metodo h3 {
+  color: #6A0B1F;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* ===== BOTONES INTERNOS ===== */
+.btn-metodo {
+  background: #6A0B1F;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  margin: 5px;
+  transition: 0.2s;
+}
+
+.btn-metodo:hover {
+  background: #53081A;
+  color: #fff;
+}
+
+/* ===== SECCIONES ===== */
+.seccion-titulo {
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #6A0B1F;
+}
+
+.seccion-descripcion {
+  text-align: center;
+  max-width: 700px;
+  margin: auto;
+  opacity: 0.85;
+  margin-bottom: 30px;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  background: #6A0B1F;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  margin-top: 60px;
+  border-top: 2px solid #53081A;
+}
+
+footer p {
+  margin: 0;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+footer a {
+  color: #FFD700;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Splines cúbicos — ln(3.5)</title>
+  <link rel="stylesheet" href="../estilos.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+  <style>
+    .tabla-vino thead{
+      background:#6A0B1F;
+      color:white;
+    }
+    .tabla-vino tbody tr:nth-child(even){
+      background:#F5E6EB;
+    }
+    .tabla-vino tbody tr:hover{
+      background:#F2D2D9;
+    }
+    .nota-metodo{
+      background:#FAF3F5;
+      border-left:6px solid #6A0B1F;
+      padding:12px;
+      margin:16px 0;
+      border-radius:6px;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-default navbar-fixed-top" style="background:#6A0B1F; border:none;">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="../Interpolacion.html" style="color:white; font-weight:bold;">Splines - Interpolación</a>
+    </div>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a style="color:white;">Humberto Joaquin Loza Fernandez</a></li>
+      <li><a style="color:white;">CI: 12480310</a></li>
+      <li><a style="color:white;">Lic. Brígida Carvajal Blanco</a></li>
+      <li><a href="../Interpolacion.html" style="color:white; font-weight:bold; background:#FFD700; padding:8px 15px; border-radius:5px; margin:5px; display:inline-block; color:#6A0B1F !important;">← Volver a Interpolación</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container" style="margin-top:90px;">
+
+  <h1 class="titulo">Interpolación por Splines Cúbicos para ln(3.5)</h1>
+
+  <p class="descripcion">
+    A diferencia de Lagrange y Newton, los <strong>Splines cúbicos</strong> no construyen un único polinomio global,
+    sino que utilizan varios polinomios de grado tres definidos por tramos. Estos polinomios garantizan continuidad en
+    el valor, en la primera derivada y también en la segunda derivada a lo largo de todo el intervalo. De esta forma,
+    la aproximación resulta más suave y fiel a la función, especialmente cuando se trabaja con muchos puntos y una
+    función con cambios importantes en su curvatura.
+  </p>
+
+  <div class="nota-metodo">
+    Los Splines proporcionan una aproximación local por cada tramo, lo que permite que la función ajustada tenga un
+    comportamiento más realista en cada intervalo. Por esta razón son muy usados en diseño asistido, animación y
+    modelado de curvas.
+  </div>
+
+  <div class="capsulas">
+    <span class="capsula">Spline cúbico</span>
+    <span class="capsula">x = 3.5</span>
+    <span class="capsula">y = ln(x)</span>
+  </div>
+
+  <h3>Puntos usados</h3>
+  <div id="tablaPuntos"></div>
+
+  <p class="descripcion">
+    Los tres puntos son los mismos que empleamos en Lagrange y Newton, lo cual permite comparar de forma directa los
+    resultados obtenidos con cada método.
+  </p>
+
+  <h3>Coeficientes</h3>
+  <p>
+    Cada tramo del spline viene dado por una expresión cúbica cuyos coeficientes dependen de las condiciones de suavidad
+    y de las segundas derivadas en los nodos. En el caso de spline natural, las segundas derivadas en los extremos se
+    fijan a cero, reduciendo el sistema a resolver.
+  </p>
+
+  <button class="btn-metodo" onclick="calcularSplines()">Calcular coeficientes</button>
+  <div id="tablaCoef" style="margin-top:15px;"></div>
+
+  <h3>Aproximación</h3>
+  <div id="resultadoSpline"></div>
+
+  <h3>Gráfica</h3>
+  <p>Se compara la aproximación por tramos con la función real ln(x).</p>
+  <canvas id="graficaSpline"></canvas>
+
+  <div class="nota-metodo">
+    En conclusión, los Splines son ideales cuando se necesita suavidad y continuidad en derivadas. Aunque Newton y
+    Lagrange construyen polinomios globales, los Splines son especialmente útiles cuando la curva debe representar
+    comportamientos complejos en distintos intervalos, evitando oscilaciones exageradas.
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// ==== MISMO JS ORIGINAL ====
+const puntos=[
+ {x:3.0,y:Math.log(3.0)},
+ {x:3.5,y:Math.log(3.5)},
+ {x:4.0,y:Math.log(4.0)}
+];
+
+function mostrarTablaPuntos(){
+ let html="<table class='table table-bordered tabla-vino'><thead><tr><th>x</th><th>ln(x)</th></tr></thead><tbody>";
+ puntos.forEach(p=>{
+  html+=`<tr><td>${p.x.toFixed(2)}</td><td>${p.y.toFixed(8)}</td></tr>`;
+ });
+ html+="</tbody></table>";
+ document.getElementById('tablaPuntos').innerHTML=html;
+}
+
+function calcularSplines(){
+ const x0=puntos[0].x,x1=puntos[1].x,x2=puntos[2].x;
+ const y0=puntos[0].y,y1=puntos[1].y,y2=puntos[2].y;
+ const h=x1-x0;
+
+ const M1=6*(y2-2*y1+y0)/(h*h);
+ const M0=0,M2=0;
+
+ const a0=y0,b0=(y1-y0)/h-(2*M0+M1)*h/6,c0=M0/2,d0=(M1-M0)/(6*h);
+ const a1=y1,b1=(y2-y1)/h-(2*M1+M2)*h/6,c1=M1/2,d1=(M2-M1)/(6*h);
+
+ let html="<table class='table table-bordered tabla-vino'><thead><tr><th>Tramo</th><th>a</th><th>b</th><th>c</th><th>d</th></tr></thead><tbody>";
+ html+=`<tr><td>[${x0},${x1}]</td><td>${a0.toFixed(8)}</td><td>${b0.toFixed(8)}</td><td>${c0.toFixed(8)}</td><td>${d0.toFixed(8)}</td></tr>`;
+ html+=`<tr><td>[${x1},${x2}]</td><td>${a1.toFixed(8)}</td><td>${b1.toFixed(8)}</td><td>${c1.toFixed(8)}</td><td>${d1.toFixed(8)}</td></tr>`;
+ html+="</tbody></table>";
+ document.getElementById('tablaCoef').innerHTML=html;
+
+ const xEval=3.5;
+ const aprox=y1;
+ const exacta=Math.log(xEval);
+ const error=Math.abs(exacta-aprox);
+
+ document.getElementById('resultadoSpline').innerHTML=
+ `<p><b>S(3.5)= ${aprox.toFixed(8)}</b></p>
+  <p>Exacto: ${exacta.toFixed(8)}</p>
+  <p>Error: ${error.toExponential(4)}</p>`;
+
+ dibujarGrafica({x0,x1,x2,a0,b0,c0,d0,a1,b1,c1,d1});
+}
+
+// ---------- CORREGIDO SOLO ESTO ----------
+function evalSpline(x,co){
+ const {x0,x1,x2,a0,b0,c0,d0,a1,b1,c1,d1}=co;
+ if(x<=x1){
+  const t=x-x0;
+  return a0 + b0*t + c0*t*t + d0*t*t*t;
+ }else{
+  const t=x-x1;
+  return a1 + b1*t + c1*t*t + d1*t*t*t;
+ }
+}
+// -----------------------------------------
+
+function dibujarGrafica(co){
+ const ctx=document.getElementById('graficaSpline');
+ const xs=[],real=[],interp=[];
+ for(let x=3;x<=4;x+=0.05){
+  xs.push(x.toFixed(2));
+  real.push(Math.log(x));
+  interp.push(evalSpline(x,co));
+ }
+ new Chart(ctx,{
+  type:'line',
+  data:{labels:xs,datasets:[
+   {label:'ln(x)',data:real,borderColor:'#6A0B1F',fill:false},
+   {label:'Spline',data:interp,borderColor:'#B44963',fill:false}
+  ]}
+ });
+}
+
+mostrarTablaPuntos();
+</script>
+
+<footer>
+  <p>&copy; 2025 Métodos Numéricos | Desarrollado por <a href="#">joako15xt</a> | Todos los derechos reservados</p>
+</footer>
+</body>
+</html>

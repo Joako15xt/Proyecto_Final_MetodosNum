@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Métodos Numéricos</title>
+  <link rel="stylesheet" href="estilos.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body style="background: #E8F4F8;">
+
+<nav class="navbar navbar-default navbar-fixed-top" style="background:#6A0B1F; border:none;">
+  <div class="container">
+    <div class="navbar-header">
+      <span class="navbar-brand" style="color:white; font-weight:bold;">Métodos Numéricos</span>
+    </div>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a style="color:white;">Humberto Joaquin Loza Fernandez</a></li>
+      <li><a style="color:white;">CI: 12480310</a></li>
+      <li><a style="color:white;">Lic. Brígida Carvajal Blanco</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container" style="margin-top:90px;">
+
+  <h1 class="titulo">Métodos Numéricos</h1>
+  <p class="descripcion">En esta página se presentan los métodos fundamentales de la materia de Métodos Numéricos, con explicaciones claras, ejemplos resueltos, tablas, desarrollo matemático y visualizaciones.</p>
+
+  <div class="capsulas">
+    <a class="capsula" href="Interpolacion.html">Métodos de Interpolación</a>
+    <a class="capsula" href="Integracion.html">Métodos de Integración</a>
+    <a class="capsula" href="raices.html">Métodos de Raíces</a>
+  </div>
+
+  <div class="row" style="margin-top:40px;">
+
+    <div class="col-md-4">
+      <div class="card-metodo" onclick="location.href='Interpolacion.html'">
+        <h3>Interpolación</h3>
+        <p>Explora métodos como Lagrange, Newton y Splines con ejemplos completos.</p>
+      </div>
+      <div style="text-align:center; margin-top:15px;">
+        <svg width="200" height="120" style="background:#F5F5F5; border-radius:8px;">
+          <polyline points="10,100 50,70 90,50 130,60 170,40" stroke="#6A0B1F" stroke-width="2" fill="none"/>
+          <circle cx="10" cy="100" r="4" fill="#FF6B6B"/>
+          <circle cx="50" cy="70" r="4" fill="#FF6B6B"/>
+          <circle cx="90" cy="50" r="4" fill="#FF6B6B"/>
+          <circle cx="130" cy="60" r="4" fill="#FF6B6B"/>
+          <circle cx="170" cy="40" r="4" fill="#FF6B6B"/>
+          <text x="85" y="115" font-size="12" text-anchor="middle" fill="#999">Puntos de interpolación</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card-metodo" onclick="location.href='Integracion.html'">
+        <h3>Integración</h3>
+        <p>Incluye métodos del Trapecio, Simpson 1/3 y Simpson 3/8 aplicados a ejercicios reales.</p>
+      </div>
+      <div style="text-align:center; margin-top:15px;">
+        <svg width="200" height="120" style="background:#F5F5F5; border-radius:8px;">
+          <polyline points="10,100 30,85 50,70 70,60 90,55 110,60 130,70 150,85 170,100" stroke="#6A0B1F" stroke-width="2" fill="none"/>
+          <rect x="30" y="85" width="20" height="15" fill="rgba(106, 11, 31, 0.2)" stroke="#6A0B1F" stroke-width="1"/>
+          <rect x="50" y="70" width="20" height="30" fill="rgba(106, 11, 31, 0.2)" stroke="#6A0B1F" stroke-width="1"/>
+          <rect x="70" y="60" width="20" height="40" fill="rgba(106, 11, 31, 0.2)" stroke="#6A0B1F" stroke-width="1"/>
+          <rect x="90" y="55" width="20" height="45" fill="rgba(106, 11, 31, 0.2)" stroke="#6A0B1F" stroke-width="1"/>
+          <rect x="110" y="60" width="20" height="40" fill="rgba(106, 11, 31, 0.2)" stroke="#6A0B1F" stroke-width="1"/>
+          <text x="85" y="115" font-size="12" text-anchor="middle" fill="#999">Área bajo curva</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card-metodo" onclick="location.href='raices.html'">
+        <h3>Métodos de Raíces</h3>
+        <p>Ejemplos usando Secante, Bisección, Newton-Raphson y Punto Fijo.</p>
+      </div>
+      <div style="text-align:center; margin-top:15px;">
+        <svg width="200" height="120" style="background:#F5F5F5; border-radius:8px;">
+          <polyline points="10,60 50,75 90,40 130,55 170,30" stroke="#6A0B1F" stroke-width="2" fill="none"/>
+          <line x1="10" y1="100" x2="180" y2="100" stroke="#999" stroke-width="1" stroke-dasharray="2,2"/>
+          <circle cx="90" cy="40" r="6" fill="#FF6B6B"/>
+          <text x="95" y="55" font-size="11" fill="#FF6B6B" font-weight="bold">raíz</text>
+          <text x="85" y="115" font-size="12" text-anchor="middle" fill="#999">Búsqueda de raíces</text>
+        </svg>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<footer>
+  <p>&copy; 2025 Métodos Numéricos | Desarrollado por <a href="#">joako15xt</a> | Todos los derechos reservados</p>
+</footer>
+
+</body>
+</html>

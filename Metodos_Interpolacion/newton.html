@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Interpolación de Newton — ln(3.5)</title>
+  <link rel="stylesheet" href="../estilos.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+  <style>
+    .tabla-vino thead{
+      background:#6A0B1F;
+      color:white;
+    }
+    .tabla-vino tbody tr:nth-child(even){
+      background:#F5E6EB;
+    }
+    .tabla-vino tbody tr:hover{
+      background:#F2D2D9;
+    }
+    .nota-metodo{
+      background:#FAF3F5;
+      border-left:6px solid #6A0B1F;
+      padding:12px;
+      margin:16px 0;
+      border-radius:6px;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-default navbar-fixed-top" style="background:#6A0B1F; border:none;">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="../Interpolacion.html" style="color:white; font-weight:bold;">Newton - Interpolación</a>
+    </div>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a style="color:white;">Humberto Joaquin Loza Fernandez</a></li>
+      <li><a style="color:white;">CI: 12480310</a></li>
+      <li><a style="color:white;">Lic. Brígida Carvajal Blanco</a></li>
+      <li><a href="../Interpolacion.html" style="color:white; font-weight:bold; background:#FFD700; padding:8px 15px; border-radius:5px; margin:5px; display:inline-block; color:#6A0B1F !important;">← Volver a Interpolación</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container" style="margin-top:90px;">
+
+  <h1 class="titulo">Interpolación de Newton para ln(3.5)</h1>
+
+  <p class="descripcion">
+    El método de Newton construye un polinomio interpolante utilizando las llamadas <strong>diferencias divididas</strong>.
+    Estas diferencias permiten calcular gradualmente los coeficientes del polinomio, de manera que cada columna
+    del esquema representa un nivel superior de aproximación basado en los datos previos. Esta construcción paso
+    a paso brinda una ventaja importante respecto a Lagrange: es posible añadir un nuevo punto sin rehacer todo
+    el cálculo desde el principio, simplemente extendiendo la tabla de diferencias divididas.
+  </p>
+
+  <div class="nota-metodo">
+    Mientras que Lagrange construye un polinomio único en forma explícita usando funciones base, Newton organiza la
+    información en un esquema triangular que facilita modificaciones futuras del conjunto de datos.
+  </div>
+
+  <div class="capsulas">
+    <span class="capsula">Método de Newton</span>
+    <span class="capsula">ln(3.5)</span>
+  </div>
+
+  <h3>Puntos utilizados</h3>
+  <div id="tablaPuntos"></div>
+
+  <h3>Diferencias divididas</h3>
+  <p>
+    La tabla siguiente muestra las diferencias divididas. Cada columna corresponde a un nivel adicional de aproximación.
+    A partir de la primera columna (valores de y) se construyen las columnas siguientes dividiendo diferencias con
+    incrementos sucesivos en x.
+  </p>
+  <button class="btn-metodo" onclick="calcularNewton()">Calcular diferencias</button>
+  <div id="tablaDif" style="margin-top:15px;"></div>
+
+  <h3>Aproximación</h3>
+  <div id="resultadoNewton"></div>
+
+  <h3>Gráfica</h3>
+  <p>Se compara el polinomio de Newton con la función real ln(x).</p>
+  <canvas id="graficaNewton"></canvas>
+
+  <div class="nota-metodo">
+    En conclusión, Newton es especialmente útil cuando se desea actualizar la interpolación al añadir nuevos puntos,
+    lo cual no ocurre con Lagrange donde el polinomio debe reconstruirse completo. Frente a los Splines, Newton
+    mantiene un único polinomio global, mientras que los trazadores utilizan polinomios por tramos.
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// ==== MISMO JS ORIGINAL ====
+const puntos=[
+ {x:3.0,y:Math.log(3.0)},
+ {x:3.5,y:Math.log(3.5)},
+ {x:4.0,y:Math.log(4.0)}
+];
+
+function mostrarTablaPuntos(){
+ let html="<table class='table table-bordered tabla-vino'><thead><tr><th>x</th><th>ln(x)</th></tr></thead><tbody>";
+ puntos.forEach(p=>{
+  html+=`<tr><td>${p.x.toFixed(2)}</td><td>${p.y.toFixed(8)}</td></tr>`;
+ });
+ html+="</tbody></table>";
+ document.getElementById('tablaPuntos').innerHTML=html;
+}
+
+function diferenciasDivididas(xs,ys){
+ let n=xs.length,tab=[];
+ for(let i=0;i<n;i++)tab[i]=[];
+ for(let i=0;i<n;i++)tab[i][0]=ys[i];
+
+ for(let j=1;j<n;j++){
+  for(let i=0;i<n-j;i++){
+   tab[i][j]=(tab[i+1][j-1]-tab[i][j-1])/(xs[i+j]-xs[i]);
+  }
+ }
+ return tab;
+}
+
+function calcularNewton(){
+ const xs=puntos.map(p=>p.x);
+ const ys=puntos.map(p=>p.y);
+ const tab=diferenciasDivididas(xs,ys);
+
+ let html="<table class='table table-bordered tabla-vino'><thead><tr>";
+ for(let j=0;j<xs.length;j++) html+=`<th>Col ${j}</th>`;
+ html+="</tr></thead><tbody>";
+
+ for(let i=0;i<xs.length;i++){
+  html+="<tr>";
+  for(let j=0;j<xs.length;j++){
+   html+=`<td>${tab[i][j]!=undefined?tab[i][j].toFixed(10):""}</td>`;
+  }
+  html+="</tr>";
+ }
+ html+="</tbody></table>";
+ tablaDif.innerHTML=html;
+
+ const x=3.5;
+ let r=tab[0][0],prod=1;
+ for(let j=1;j<xs.length;j++){
+  prod*=(x-xs[j-1]);
+  r+=tab[0][j]*prod;
+ }
+ const ex=Math.log(x);
+ const err=Math.abs(ex-r);
+
+ resultadoNewton.innerHTML=
+ `<p><b>P(3.5)= ${r.toFixed(8)}</b></p>
+  <p>Exacto: ${ex.toFixed(8)}</p>
+  <p>Error: ${err.toExponential(4)}</p>`;
+
+ dibujarGrafica(tab);
+}
+
+function evalNewton(x,tab,xs){
+ let n=xs.length,res=tab[0][0],prod=1;
+ for(let j=1;j<n;j++){
+  prod*=(x-xs[j-1]);
+  res+=tab[0][j]*prod;
+ }
+ return res;
+}
+
+function dibujarGrafica(tab){
+ const ctx=document.getElementById('graficaNewton');
+ const xs=puntos.map(p=>p.x),X=[],real=[],interp=[];
+ for(let x=3;x<=4;x+=0.05){
+  X.push(x.toFixed(2));
+  real.push(Math.log(x));
+  interp.push(evalNewton(x,tab,xs));
+ }
+ new Chart(ctx,{
+  type:'line',
+  data:{labels:X,datasets:[
+   {label:'ln(x)',data:real,borderColor:'#6A0B1F',fill:false},
+   {label:'Newton',data:interp,borderColor:'#B44963',fill:false}
+  ]}
+ });
+}
+
+mostrarTablaPuntos();
+</script>
+
+<footer>
+  <p>&copy; 2025 Métodos Numéricos | Desarrollado por <a href="#">joako15xt</a> | Todos los derechos reservados</p>
+</footer>
+</body>
+</html>

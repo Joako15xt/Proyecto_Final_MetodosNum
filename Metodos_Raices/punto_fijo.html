@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Punto Fijo — e^{-x} - x = 0</title>
+<link rel="stylesheet" href="../estilos.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<style>
+.tabla-naranja thead{
+  background:#B35400;
+  color:white;
+}
+.tabla-naranja tbody tr:nth-child(even){
+  background:#F7D8BF;
+}
+.tabla-naranja tbody tr:hover{
+  background:#F4C099;
+}
+.nota-metodo{
+  background:#FFF4E5;
+  border-left:6px solid #B35400;
+  padding:12px;
+  margin:16px 0;
+  border-radius:6px;
+}
+</style>
+
+</head>
+<body>
+
+<nav class="navbar navbar-default navbar-fixed-top" style="background:#6A0B1F; border:none;">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="../raices.html" style="color:white; font-weight:bold;">Punto Fijo</a>
+    </div>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a style="color:white;">Humberto Joaquin Loza Fernandez</a></li>
+      <li><a style="color:white;">CI: 12480310</a></li>
+      <li><a style="color:white;">Lic. Brígida Carvajal Blanco</a></li>
+      <li><a href="../raices.html" style="color:white; font-weight:bold; background:#FFD700; padding:8px 15px; border-radius:5px; margin:5px; display:inline-block; color:#6A0B1F !important;">← Volver a Raíces</a></li>
+    </ul>
+  </div>
+</nav>
+
+
+<div class="container" style="margin-top:90px;">
+
+  <h1 class="titulo">Método de Punto Fijo</h1>
+
+  <h3>Ejercicio a resolver</h3>
+  <p class="descripcion">
+    Resolver la ecuación no lineal <code>f(x)=e^{-x}-x = 0</code>. Para aplicar Punto Fijo necesitamos
+    reescribirla como <code>x = g(x)</code>. Elegimos:
+    <br><br>
+    <code>g(x)=e^{-x}</code>.
+  </p>
+
+  <h3>¿Qué es el método de Punto Fijo?</h3>
+  <p class="descripcion">
+    Consiste en reorganizar la ecuación para obtener una función <strong>g(x)</strong> tal que
+    <br>si iteramos <code>x(i+1)=g(x(i))</code>, los valores converjan hacia una solución.
+  </p>
+
+  <div class="nota-metodo">
+    A diferencia de Newton–Raphson, Punto Fijo <strong>no usa derivadas</strong>, pero puede ser más lento
+    y no siempre converge para cualquier g(x).
+  </div>
+
+  <div class="capsulas">
+    <span class="capsula">g(x)=e^{-x}</span>
+    <span class="capsula">x₀ = 1</span>
+    <span class="capsula">Tolerancia = 0.00005</span>
+  </div>
+
+  <div class="card-metodo">
+      <h3>Aplicación del método</h3>
+      <p>Iteración básica:
+      <br>
+      <code>x(i+1) = g(x(i)) = e^{-x(i)}</code>
+      </p>
+      <button class="btn-metodo" onclick="puntoFijo()">Calcular Punto Fijo</button>
+      <div id="tablaPF" style="margin-top:15px;"></div>
+  </div>
+
+  <div class="card-metodo">
+    <h3>Resultado aproximado</h3>
+    <div id="resultadoPF"></div>
+  </div>
+
+  <div class="card-metodo">
+    <h3>Gráfica e iteraciones</h3>
+    <canvas id="graficaPF"></canvas>
+  </div>
+
+  <div class="nota-metodo">
+    <strong>Conclusión:</strong> Punto Fijo es un método sencillo que no requiere derivadas, pero depende totalmente
+    de la forma elegida para <strong>g(x)</strong>. Si esta forma no es adecuada, puede divergir.
+  </div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// g(x) para punto fijo
+function g(x){ return Math.exp(-x); }
+function f(x){ return Math.exp(-x) - x; }
+
+
+// ===== TU JS ORIGINAL =====
+function puntoFijo(){
+  let x = 1;
+  const tol = 0.00005;
+  let iter = 0;
+
+  let html = "<table class='table tabla-naranja table-bordered'>"+
+             "<thead><tr><th>#</th><th>x</th><th>g(x)</th><th>f(x)</th></tr></thead><tbody>";
+
+  let px=[], py=[];
+
+  while(true){
+    let gx = g(x);
+    let fx = f(x);
+
+    html += `<tr><td>${iter}</td><td>${x.toFixed(6)}</td><td>${gx.toFixed(10)}</td><td>${fx.toFixed(10)}</td></tr>`;
+
+    px.push(x);
+    py.push(fx);
+
+    if(Math.abs(fx) <= tol){
+      document.getElementById('tablaPF').innerHTML = html + "</tbody></table>";
+      document.getElementById('resultadoPF').innerHTML = `
+        <p><strong>Raíz aproximada = </strong>${x.toFixed(10)}</p>
+        <p><strong>f(x) = </strong>${fx.toFixed(10)}</p>
+        <p><strong>Iteraciones = </strong>${iter}</p>`;
+      graf(px,py);
+      break;
+    }
+
+    x = gx;
+    iter++;
+    if(iter>200)break;
+  }
+}
+
+function graf(px,py){
+  const ctx=document.getElementById('graficaPF');
+  const xs=[], ys=[];
+  for(let x=-2;x<=2;x+=0.1){ xs.push(x); ys.push(f(x)); }
+
+  const lineData = xs.map((x,i)=>({x:x, y:ys[i]}));
+  const iterData = px.map((m,i)=>({x:m, y:py[i]}));
+
+  new Chart(ctx,{
+    type:'line',
+    data:{
+      datasets:[
+        {label:'f(x)', data:lineData, borderColor:'#B35400', showLine:true, fill:false, pointRadius:0},
+        {label:'Iteraciones', data:iterData, borderColor:'orange',
+         backgroundColor:'orange', pointRadius:6, showLine:false, type:'scatter'}
+      ]
+    },
+    options:{
+      responsive:true,
+      scales:{
+        x:{ type:'linear', title:{display:true, text:'x'} },
+        y:{ title:{display:true, text:'f(x)'} }
+      }
+    }
+  });
+}
+</script>
+
+<footer>
+  <p>&copy; 2025 Métodos Numéricos | Desarrollado por <a href="#">joako15xt</a> | Todos los derechos reservados</p>
+</footer>
+</body>
+</html>

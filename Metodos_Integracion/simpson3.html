@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Simpson 3/8</title>
+  <link rel="stylesheet" href="../estilos.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body>
+<nav class="navbar navbar-default navbar-fixed-top" style="background:#6A0B1F; border:none;">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="../Integracion.html" style="color:white; font-weight:bold;">Simpson 3/8</a>
+    </div>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a style="color:white;">Humberto Joaquin Loza Fernandez</a></li>
+      <li><a style="color:white;">CI: 12480310</a></li>
+      <li><a style="color:white;">Lic. Brígida Carvajal Blanco</a></li>
+      <li><a href="../Integracion.html" style="color:white; font-weight:bold; background:#FFD700; padding:8px 15px; border-radius:5px; margin:5px; display:inline-block; color:#6A0B1F !important;">← Volver a Integración</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container" style="margin-top:90px;">
+
+  <h1 class="titulo">Método de Simpson 3/8</h1>
+
+<p>
+Simpson 3/8 utiliza polinomios cúbicos para aproximar la integral, siendo una evolución del método Simpson 1/3 porque trabaja
+con estructuras de tres subintervalos. Para aplicarlo la cantidad de subintervalos debe ser múltiplo de tres. Debido
+a que usa funciones interpoladas de grado superior a las del 1/3, puede ofrecer mejor precisión en casos donde la
+función presenta cambios de curvatura más notorios. La integral se obtiene mediante la combinación ponderada de los
+valores calculados en cada punto.
+</p>
+
+<img src="../imgej.png" alt="imagen ejercicio" onerror="this.src='https://via.placeholder.com/800x300?text=Ejercicio+no+disponible'" class="img-responsive" style="margin:20px auto; border:4px solid #6A0B1F; border-radius:10px;">
+
+<p>
+Esta técnica distribuye el peso en distintos coeficientes, ponderando ciertos puntos con 3 y otros con 2, dependiendo
+de su posición relativa dentro de los tramos definidos por h. En la práctica suele ser más exacta que Simpson 1/3,
+pero requiere una partición compatible con múltiplos de tres, lo cual limita la elección de n en algunos casos.
+La fórmula general establece cómo deben combinarse los valores obtenidos para cada x generado.
+</p>
+
+<div class="capsulas"><span class="capsula">Simpson 3/8</span></div>
+
+<div class="card-metodo">
+<h3>Fórmula</h3>
+<p>\[\int f(x)dx\approx \frac{3h}{8}(y_0+y_n+3(y_1+y_2+y_4+y_5+...)+2(y_3+y_6+...))\]</p>
+<p>Nota: <strong>n debe ser múltiplo de 3</strong> para usar Simpson 3/8.</p>
+</div>
+
+<div class="card-metodo" style="cursor:default;">
+  <h3>Configuración y cálculo</h3>
+  <label>n (múltiplo de 3):</label>
+  <input id="inputN" type="number" value="6" min="3" max="120" step="3" style="width:80px;">
+  <button onclick="simpson38()" class="btn-metodo">Calcular Simpson 3/8</button>
+  <div id="tablaS38" style="margin-top:15px;"></div>
+</div>
+
+<div class="card-metodo" style="cursor:default;">
+  <h3>Resultado</h3>
+  <div id="resultadoS38"></div>
+</div>
+
+<div class="card-metodo" style="cursor:default;">
+  <h3>Gráfica</h3>
+  <canvas id="graficaS38"></canvas>
+</div>
+
+<p class="descripcion" style="margin-top:30px">
+Simpson 3/8 proporciona una aproximación aún más refinada usando polinomios de grado tres, lo cual lo hace
+especialmente útil cuando las funciones tienen mayor variación en su curvatura. Al igual que los otros métodos,
+incrementar el número de intervalos disminuye el error.
+</p>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script>
+function f(x){ return Math.pow(x-2,2); }
+
+function simpson38(){
+  const a=2, b=5;
+  const n=parseInt(document.getElementById('inputN').value);
+  if(n%3!==0){ alert('n debe ser múltiplo de 3'); return; }
+  const h=(b-a)/n;
+
+  let xs=[], ys=[];
+  for(let i=0;i<=n;i++){
+    const x=a+i*h;
+    xs.push(x);
+    ys.push(f(x));
+  }
+
+  let html="<table class='table table-bordered table-striped'><thead><tr><th>i</th><th>x(i)</th><th>y(i)</th></tr></thead><tbody>";
+  for(let i=0;i<=n;i++){
+    html+=`<tr><td>${i}</td><td>${xs[i].toFixed(4)}</td><td>${ys[i].toFixed(6)}</td></tr>`;
+  }
+  html+="</tbody></table>";
+  document.getElementById('tablaS38').innerHTML=html;
+
+  let sum3=0, sum2=0;
+  for(let i=1;i<n;i++){
+    if(i%3!==0) sum3+=ys[i]; else sum2+=ys[i];
+  }
+
+  const A=(3*h/8)*(ys[0]+ys[n] + 3*sum3 + 2*sum2);
+  document.getElementById('resultadoS38').innerHTML=`<p><strong>Aproximación Simpson 3/8 = </strong>${A.toFixed(8)}</p>`;
+
+  dibujar(xs,ys);
+}
+
+function dibujar(xs,ys){
+  const ctx=document.getElementById('graficaS38');
+  new Chart(ctx,{
+    type:'line',
+    data:{ labels:xs.map(x=>x.toFixed(2)), datasets:[{label:'f(x)', data:ys, borderColor:'purple', fill:false}]},
+    options:{responsive:true, scales:{y:{beginAtZero:true}}}
+  });
+}
+
+simpson38();
+</script>
+
+<footer>
+  <p>&copy; 2025 Métodos Numéricos | Desarrollado por <a href="#">joako15xt</a> | Todos los derechos reservados</p>
+</footer>
+</body>
+</html>

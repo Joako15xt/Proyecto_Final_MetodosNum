@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Métodos de Raíces - Métodos Numéricos</title>
+  <link rel="stylesheet" href="estilos.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-default navbar-fixed-top" style="background:#6A0B1F; border:none;">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="index.html" style="color:white; font-weight:bold;">Métodos de Raíces</a>
+    </div>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a style="color:white;">Humberto Joaquin Loza Fernandez</a></li>
+      <li><a style="color:white;">CI: 12480310</a></li>
+      <li><a style="color:white;">Lic. Brígida Carvajal Blanco</a></li>
+      <li><a href="index.html" style="color:white; font-weight:bold; background:#FFD700; padding:8px 15px; border-radius:5px; margin:5px; display:inline-block; color:#6A0B1F !important;">← Volver al Inicio</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container" style="margin-top:90px;">
+
+  <h1 class="titulo">Métodos para Encontrar Raíces</h1>
+  <p class="descripcion">
+    Los métodos de raíces permiten encontrar valores donde una función se hace cero. Estos métodos son
+    fundamentales en física, ingeniería, matemática aplicada y computación científica.
+  </p>
+
+  <h2 class="seccion-titulo" style="margin-top:40px;">Selecciona un Método</h2>
+  <p class="seccion-descripcion">Haz clic en una tarjeta para ver el método explicado junto a un ejercicio.</p>
+
+  <!-- TARJETAS DE MÉTODOS -->
+  <div class="row">
+
+    <div class="col-md-3">
+      <div class="card-metodo" onclick="location.href='Metodos_Raices/biseccion.html'">
+        <h3>Bisección</h3>
+        <p>Método robusto basado en intervalos que garantizan la existencia de una raíz.</p>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card-metodo" onclick="location.href='Metodos_Raices/secante.html'">
+        <h3>Secante</h3>
+        <p>Similar a Newton pero sin derivada. Útil para funciones complejas.</p>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card-metodo" onclick="location.href='Metodos_Raices/newton_raphson.html'">
+        <h3>Newton-Raphson</h3>
+        <p>Método rápido y eficiente basado en derivadas.</p>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card-metodo" onclick="location.href='Metodos_Raices/punto_fijo.html'">
+        <h3>Punto Fijo</h3>
+        <p>Transforma la ecuación en una función iterativa para aproximar la raíz.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- DESCRIPCIÓN GENERAL -->
+  <div class="card-metodo" style="margin-top:40px; cursor:default;">
+    <h3>¿Para qué sirven los métodos de raíces?</h3>
+    <p style="font-size:15px;">
+      Los métodos de raíces permiten resolver ecuaciones que no pueden resolverse analíticamente. Son
+      esenciales en problemas de optimización, dinámica, ingeniería, ecuaciones diferenciales y
+      simulaciones numéricas.
+    </p>
+  </div>
+
+</div>
+
+<footer>
+  <p>&copy; 2025 Métodos Numéricos | Desarrollado por <a href="#">joako15xt</a> | Todos los derechos reservados</p>
+</footer>
+
+</body>
+</html>

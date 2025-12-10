@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bisección — e^{-x} - x = 0</title>
+  <link rel="stylesheet" href="../estilos.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+  <style>
+    .tabla-vino thead{
+      background:#6A0B1F;
+      color:white;
+    }
+    .tabla-vino tbody tr:nth-child(even){
+      background:#F5E6EB;
+    }
+    .tabla-vino tbody tr:hover{
+      background:#F2D2D9;
+    }
+    .nota-metodo{
+      background:#FAF3F5;
+      border-left:6px solid #6A0B1F;
+      padding:12px;
+      margin:16px 0;
+      border-radius:6px;
+    }
+  </style>
+
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="navbar navbar-default navbar-fixed-top" style="background:#6A0B1F; border:none;">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="../raices.html" style="color:white; font-weight:bold;">Bisección</a>
+    </div>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a style="color:white;">Humberto Joaquin Loza Fernandez</a></li>
+      <li><a style="color:white;">CI: 12480310</a></li>
+      <li><a style="color:white;">Lic. Brígida Carvajal Blanco</a></li>
+      <li><a href="../raices.html" style="color:white; font-weight:bold; background:#FFD700; padding:8px 15px; border-radius:5px; margin:5px; display:inline-block; color:#6A0B1F !important;">← Volver a Raíces</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- CONTENIDO -->
+<div class="container" style="margin-top:90px;">
+
+  <h1 class="titulo">Método de Bisección</h1>
+
+  <!-- EJERCICIO EXPLÍCITO -->
+  <h3>Ejercicio a resolver</h3>
+  <p class="descripcion">
+    Resolver la ecuación no lineal:
+    <br><br>
+    <code>f(x) = e^{-x} - x = 0</code>
+    <br><br>
+    usando el método de Bisección sobre el intervalo inicial <strong>[0.5 , 1]</strong>.
+  </p>
+
+  <!-- TEORÍA -->
+  <h3>¿Qué es el método de Bisección?</h3>
+  <p class="descripcion">
+    Bisección es un método numérico que permite encontrar raíces de ecuaciones mediante el análisis del
+    <strong>cambio de signo</strong> de la función. Según el <em>Teorema del Valor Intermedio</em>, si una función es
+    continua en el intervalo [a,b] y ocurre que <strong>f(a)·f(b) &lt; 0</strong>, entonces existe al menos una raíz en
+    ese intervalo. El método consiste en dividir repetidamente el intervalo por la mitad hasta alcanzar la precisión
+    deseada.
+  </p>
+
+  <div class="nota-metodo">
+    La bisección es un método <strong>muy estable</strong> y siempre converge si existe cambio de signo, pero puede ser
+    más lenta que Newton-Raphson o la Secante.
+  </div>
+
+  <div class="capsulas">
+    <span class="capsula">Cambio de signo</span>
+    <span class="capsula">Intervalo: [0.5,1]</span>
+    <span class="capsula">Tolerancia: 0.00005</span>
+  </div>
+
+  <!-- TABLA -->
+  <div class="card-metodo">
+    <h3>Aplicación del método</h3>
+    <p>
+      Fórmula del punto medio:
+      <br><code>m = (a + b) / 2</code>
+      <br><br>
+      Si f(a)*f(m) &lt; 0, la nueva raíz está entre a y m. De lo contrario se encuentra entre m y b.
+    </p>
+
+    <button class="btn-metodo" onclick="biseccion()">Calcular Bisección</button>
+    <!-- tabla -->
+    <div id="tablaBis" style="margin-top:15px;"></div>
+  </div>
+
+  <!-- RESULTADO -->
+  <div class="card-metodo">
+    <h3>Resultado</h3>
+    <div id="resultadoBis"></div>
+  </div>
+
+  <!-- GRAFICO -->
+  <div class="card-metodo">
+    <h3>Gráfica de la función e iteraciones</h3>
+    <canvas id="graficaBis"></canvas>
+  </div>
+
+  <div class="nota-metodo">
+    <strong>Conclusión:</strong> Bisección garantiza convergencia siempre que haya cambio de signo, pero puede requerir
+    muchas iteraciones comparada con Newton-Raphson o la Secante, que son métodos más rápidos aunque menos seguros.
+  </div>
+
+</div>
+
+<!-- SCRIPTS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+function f(x){ return Math.exp(-x) - x; }
+
+// =================== TU JS ORIGINAL ================
+function biseccion(){
+  let a = 0.5;
+  let b = 1;
+  const tol = 0.00005;
+  let iter = 0;
+
+  let html = "<table class='table tabla-vino table-bordered'>"+
+             "<thead><tr><th>#</th><th>a</th><th>b</th><th>m</th><th>f(m)</th></tr></thead><tbody>";
+
+  let puntosX = [], puntosY = [];
+
+  while(true){
+    let m = (a+b)/2;
+    let fm = f(m);
+
+    html += `<tr><td>${iter}</td><td>${a.toFixed(6)}</td><td>${b.toFixed(6)}</td><td>${m.toFixed(6)}</td><td>${fm.toFixed(10)}</td></tr>`;
+
+    puntosX.push(m);
+    puntosY.push(fm);
+
+    if(Math.abs(fm) <= tol){
+      document.getElementById('tablaBis').innerHTML = html + "</tbody></table>";
+      document.getElementById('resultadoBis').innerHTML =
+      `<p><strong>Raíz aproximada = </strong>${m.toFixed(10)}</p>
+       <p><strong>f(m) = </strong>${fm.toFixed(10)}</p>
+       <p><strong>Iteraciones = </strong>${iter}</p>`;
+      dibujarGrafica(puntosX, puntosY);
+      break;
+    }
+
+    if(f(a)*fm < 0) b = m; else a = m;
+
+    iter++;
+    if(iter > 100) break;
+  }
+}
+
+function dibujarGrafica(px, py){
+  const ctx = document.getElementById('graficaBis');
+  const xs = [], ys = [];
+  for(let x=-2; x<=2; x+=0.1){ xs.push(x); ys.push(f(x)); }
+
+  new Chart(ctx,{
+    type:'scatter',
+    data:{
+      labels: xs,
+      datasets:[
+        {label:'f(x)', data:ys, borderColor:'#6A0B1F', showLine:true, fill:false},
+        {label:'Iteraciones', data:px.map((m,i)=>({x:m,y:py[i]})), borderColor:'#B44963', showLine:true, fill:false}
+      ]
+    },
+    options:{responsive:true}
+  });
+}
+</script>
+
+<footer>
+  <p>&copy; 2025 Métodos Numéricos | Desarrollado por <a href="#">joako15xt</a> | Todos los derechos reservados</p>
+</footer>
+</body>
+</html>
